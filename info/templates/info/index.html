@@ -5,7 +5,7 @@
 {% if latest_list %}
     {% for info in latest_list %}
     	<div class="col-md-8 col-md-offset-2">
-	    	<h2><a href="{% url "info.detail" info.pk%}">{{info}}</a></h2>
+	    	<h3><a href="{% url "info.detail" info.pk%}">{{info}}</a></h3>
 	    	<h6>{{info.content|truncatechars:200}}</h6>
 	    	<hr>
     	</div>

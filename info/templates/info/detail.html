@@ -2,21 +2,26 @@
 
 {% block body %}
 <div id="content-main">
-{% if info %}
    	<div class="col-md-10 col-md-offset-1">
-	   	<div class="row">
-		   	<div class="col-md-10">
-		   		<h1>{{info}}</h1>
-		   	</div>
-		   	<div class="col-md-1 col-md-offset-1">
-		   		<a href="{% url "info.index" %}" class="btn btn-primary large">返回</a>
-		   	</div>
+		<div class="row">
+			<div class="col-md-6">
+		   		<a href="{% url "info.index" %}" class="btn btn-danger large">返回</a>
+				<a href="{% url "info.index" %}" class="btn btn-info">地区：{{info.info_area}}</a>
+				<a href="{% url "info.index" %}" class="btn btn-info">类别：{{info.info_class}}</a>
+			</div>
 		</div>
+		<br>
+	   	<div class="row">
+	   		<h2>{{info}}</h2>
+		</div>
+		<hr>
+	   	<div class="row">
+	   		<p>{{info.content}}</p>
+	   	</div>
 	   	<hr>
-	   	<p>{{info.content}}</p>
+	   	<div class="col-md-12 text-right">
+			发布时间： {{ info.pub_date|date:"D d M Y" }}			
+		</div>
    	</div>
-{% else %}
-    <p>No info are available.</p>
-{% endif %}
 </div>
 {% endblock %}
