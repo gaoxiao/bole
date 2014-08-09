@@ -6,7 +6,9 @@
 		<div class="row">
 			<div class="col-md-6">
 		   		<a href="{% url "info.index" %}" class="btn btn-danger large">返回</a>
-				<a href="{% url "info.index" %}" class="btn btn-info">地区：{{info.info_area}}</a>
+				<a href="{% url "info.index" %}" class="btn btn-info">
+					地区：{{info.info_area}} <span class="badge">42</span>
+				</a>
 				<a href="{% url "info.index" %}" class="btn btn-info">类别：{{info.info_class}}</a>
 			</div>
 		</div>
@@ -14,11 +16,9 @@
 	   	<div class="row">
 	   		<h2>{{info}}</h2>
 		</div>
-		<hr>
 	   	<div class="row">
-	   		<p>{{info.content}}</p>
+	   		<pre>{{info.content}}</pre>
 	   	</div>
-	   	<hr>
 	   	<div class="col-md-12 text-right">
 			发布时间： {{ info.pub_date|date:"Y M d" }}			
 		</div>
