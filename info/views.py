@@ -5,6 +5,7 @@ from info.models import Info
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models.expressions import F
 
 PAGE_SIZE = 4
 
@@ -17,8 +18,7 @@ def list(request, page_num):
     all_list = Info.objects.order_by('-pub_date')
     return render_with_list(request, all_list,
                             page_num=page_num,
-                            url_name='info.list',
-                            render_url='info/list.html')
+                            url_name='info.list',)
 
 @login_required
 def query_by_area(request, area_id, page_num):
@@ -26,8 +26,7 @@ def query_by_area(request, area_id, page_num):
     return render_with_list(request, all_list,
                             page_num=page_num,
                             url_name='info.by_area',
-                            query_id=area_id,
-                            render_url='info/query_list.html')
+                            query_id=area_id,)
 
 @login_required
 def query_by_class(request, class_id, page_num):
@@ -35,8 +34,7 @@ def query_by_class(request, class_id, page_num):
     return render_with_list(request, all_list,
                             page_num=page_num,
                             url_name='info.by_class',
-                            query_id=class_id,
-                            render_url='info/query_list.html')
+                            query_id=class_id,)
 
 '''
 公用分页方法
@@ -60,7 +58,7 @@ def render_with_list(request, all_list, **args):
     prev_page = page_num - 1 if page_num > 1 else page_num
     next_page = page_num + 1 if page_num < paginator.num_pages else page_num
 
-    return render(request, args['render_url'],
+    return render(request, 'info/list.html',
                   {'info_list' : info_list,
                    'page_range' : paginator.page_range,
                    'prev_page' : prev_page,
@@ -73,6 +71,11 @@ def render_with_list(request, all_list, **args):
 @login_required
 def detail(request, id, from_url):
     info = Info.objects.get(pk=id);
+
+    # update view times
+    info.view_times += 1
+    info.save()
+
     area_num = info.info_area.info_set.count()
     class_num = info.info_class.info_set.count()
     return render(request, 'info/detail.html',

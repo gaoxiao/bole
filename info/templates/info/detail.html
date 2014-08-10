@@ -20,8 +20,10 @@
 	   	<div class="row">
 	   		<pre style="background-color:white">{{info.content}}</pre>
 	   	</div>
-	   	<div class="col-md-12 text-right">
-			发布时间： {{ info.pub_date|date:"Y M d" }}			
+	   	
+	   	<div class="row">
+	   		<a class="btn btn-info btn-xs ">访问次数：<span class="badge">{{info.view_times}}</span></a>
+	   		<a class="btn btn-info btn-xs pull-right">发布时间：{{info.pub_date|date:"Y M d"}}</a>
 		</div>
    	</div>
 </div>
