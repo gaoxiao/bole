@@ -5,9 +5,13 @@ from info.models import Info
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models.expressions import F
+from django.core.cache import cache
+
+
 
 PAGE_SIZE = 4
+CACHE_PREFIX = 'local_'
+CACHE_TIME = 60 * 60
 
 @login_required
 def index(request):
@@ -22,7 +26,7 @@ def list(request, page_num):
 
 @login_required
 def query_by_area(request, area_id, page_num):
-    all_list = Info.objects.order_by('-pub_date').filter(info_area__pk=area_id)
+    all_list = Info.objects.filter(info_area__pk=area_id).order_by('-pub_date')
     return render_with_list(request, all_list,
                             page_num=page_num,
                             url_name='info.by_area',
@@ -30,7 +34,7 @@ def query_by_area(request, area_id, page_num):
 
 @login_required
 def query_by_class(request, class_id, page_num):
-    all_list = Info.objects.order_by('-pub_date').filter(info_class__pk=class_id)
+    all_list = Info.objects.filter(info_class__pk=class_id).order_by('-pub_date')
     return render_with_list(request, all_list,
                             page_num=page_num,
                             url_name='info.by_class',
@@ -76,11 +80,21 @@ def detail(request, id, from_url):
     info.view_times += 1
     info.save()
 
-    area_num = info.info_area.info_set.count()
-    class_num = info.info_class.info_set.count()
+    area_num, class_num = get_from_cache(info)
+
     return render(request, 'info/detail.html',
                   {'info' : info,
                    'from_url' : from_url,
                    'area_num' : area_num,
                    'class_num' : class_num,
                    })
+
+def get_from_cache(info):
+    key = CACHE_PREFIX + str(info.pk)
+    tuple = cache.get(key)
+    if not tuple:
+        tuple = (info.info_area.info_set.count(),
+                 info.info_class.info_set.count())
+        cache.set(key, tuple, CACHE_TIME)
+    return tuple
+

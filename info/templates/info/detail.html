@@ -22,9 +22,9 @@
 	   	</div>
 	   	
 	   	<div class="row">
-	   		<a class="btn btn-info btn-xs" disabled="disabled">访问次数：<span class="badge">{{info.view_times}}</span></a>
-	   		<a class="btn btn-info btn-xs pull-right" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
-		</div>
+	   		<a class="btn btn-warning btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
+			<a class="btn btn-warning btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
+    	</div>
    	</div>
 </div>
 {% endblock %}

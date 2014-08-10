@@ -5,7 +5,7 @@
 	<!-- info 列表 -->
     {% for info in info_list %}
    	<div class="col-md-8 col-md-offset-2">
-    	<h3><a href="{% url "info.detail" info.pk request.path %}">{{info}}</a></h3>
+    	<a href="{% url "info.detail" info.pk request.path %}" class="btn btn-default"><h4>{{info}}</h4></a>
     	<h6>{{info.content|truncatechars:200}}</h6>
     	
     	<!-- 分类信息 -->
@@ -13,8 +13,8 @@
 		<a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
 		
 		<!-- view times -->
-		<a class="btn btn-info btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
-		<a class="btn btn-info btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
+		<a class="btn btn-warning btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
+		<a class="btn btn-warning btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
     	<hr>
    	</div>
     {% endfor %}
