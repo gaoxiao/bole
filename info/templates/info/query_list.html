@@ -5,7 +5,7 @@
 {% if info_list %}
     {% for info in info_list %}
    	<div class="col-md-8 col-md-offset-2">
-    	<h3><a href="{% url "info.detail" info.pk request.path%}">{{info}}</a></h3>
+    	<h3><a href="{% url "info.detail" info.pk request.path %}">{{info}}</a></h3>
     	<h6>{{info.content|truncatechars:200}}</h6>
     	
     	<!-- 分类信息 -->
@@ -20,16 +20,16 @@
     {% endfor %}
     <div id="pagination" class="col-md-8 col-md-offset-2">
 		<ul class="pagination">
-			<li><a href="{% url url_name prev_page %}">&laquo;</a></li>
+			<li><a href="{% url url_name query_id prev_page %}">&laquo;</a></li>
 			{% for idx in page_range %}
 				<!-- 是否为选中状态 -->
 				{% if curr_page == idx %}
-				<li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
+				<li class="active"><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
 				{% else %}
-				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
+				<li><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
-			<li><a href="{% url url_name next_page %}">&raquo;</a></li>
+			<li><a href="{% url url_name query_id next_page %}">&raquo;</a></li>
 		</ul>
 	</div>
 {% else %}
