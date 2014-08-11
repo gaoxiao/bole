@@ -9,7 +9,7 @@ from django.core.cache import cache
 
 
 
-PAGE_SIZE = 4
+PAGE_SIZE = 20
 CACHE_PREFIX = 'local_'
 CACHE_TIME = 60 * 60
 
