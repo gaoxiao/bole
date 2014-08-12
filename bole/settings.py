@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     # external
     "account",
     "eventlog",
+    "haystack",
 
     'info'
 )
@@ -152,6 +153,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+"""
+cache
+"""
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -160,3 +164,15 @@ CACHES = {
 }
 CACHE_MIDDLEWARE_SECONDS = 2
 CACHE_MIDDLEWARE_KEY_PREFIX = 'local_'
+
+
+"""
+search
+"""
+import os
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
