@@ -10,7 +10,7 @@ from info.models import Info
 
 class InfoIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    author = indexes.CharField(model_attr='title')
+    title = indexes.CharField(model_attr='title', boost=1.5)
     pub_date = indexes.DateTimeField(model_attr='pub_date')
 
     def get_model(self):

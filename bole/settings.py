@@ -162,7 +162,7 @@ CACHES = {
         'LOCATION': 'unique-snowflake'
     }
 }
-CACHE_MIDDLEWARE_SECONDS = 2
+CACHE_MIDDLEWARE_SECONDS = 0
 CACHE_MIDDLEWARE_KEY_PREFIX = 'local_'
 
 

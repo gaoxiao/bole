@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.cache import cache
+from haystack.views import SearchView
 
 
 
@@ -98,3 +99,25 @@ def get_from_cache(info):
         cache.set(key, tuple, CACHE_TIME)
     return tuple
 
+
+class InfoSearchView(SearchView):
+    
+    def create_response(self):
+        """
+        Generates the actual HttpResponse to send back to the user.
+        """
+        (paginator, page) = self.build_page()
+
+        context = {
+            'query': self.query,
+            'form': self.form,
+            'page': page,
+            'paginator': paginator,
+            'suggestion': None,
+        }
+
+        if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
+            context['suggestion'] = self.form.get_suggestion()
+
+        context.update(self.extra_context())
+        return render(self.request, self.template, context)

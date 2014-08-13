@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     url(r'^list/(\d+)$', views.list, name='info.list'),
     url(r'^by_area/(\d+)/(\d+)$', views.query_by_area, name='info.by_area'),
     url(r'^by_class/(\d+)/(\d+)$', views.query_by_class, name='info.by_class'),
-    url(r'^detail/(\d+)/(.*)$', views.detail, name='info.detail')
+    url(r'^detail/(\d+)/(.*)$', views.detail, name='info.detail'),
+    url(r'^search$', views.InfoSearchView(), name='info.search')
 )

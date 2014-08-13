@@ -11,4 +11,5 @@ Getting Started:
     
 Before search, run:
 	
+	copy whoosh_cn_backend.py to %python_path%\Lib\site-packages\haystack\backends
 	python manage.py rebuild_index
