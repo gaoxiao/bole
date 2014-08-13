@@ -2,9 +2,10 @@
 
 # Create your views here.
 from info.models import Info
+from info.form import SearchForm
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
 from django.core.cache import cache
 from haystack.views import SearchView
 
@@ -55,7 +56,8 @@ def render_with_list(request, all_list, **args):
         'paginator' : paginator,
         'page' : paginator.page(page_num),
         'url_name' : args['url_name'],
-        'query_id' : args.get('query_id')
+        'query_id' : args.get('query_id'),
+        'form' : SearchForm()
     }
 
     return render(request, 'info/list.html', context)
