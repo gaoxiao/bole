@@ -14,7 +14,7 @@
    	</div>
    	
 	<!-- info 列表 -->
-    {% for info in info_list %}
+    {% for info in page %}
    	<div class="col-md-8 col-md-offset-2">
     	<a href="{% url "info.detail" info.pk request.path %}" class="btn btn-default"><h4>{{info}}</h4></a>
     	<h6>{{info.content|striptags|truncatechars:200}}</h6>
@@ -36,29 +36,29 @@
 		
 		<!-- index page -->
 		{% if query_id == None %}
-			<li><a href="{% url url_name prev_page %}">&laquo;</a></li>
-			{% for idx in page_range %}
+			{% if page.has_previous %}<li><a href="{% url url_name page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			{% for idx in paginator.page_range %}
 				<!-- 是否为选中状态 -->
-				{% if curr_page == idx %}
+				{% if page.number == idx %}
 				<li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% else %}
 				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
-			<li><a href="{% url url_name next_page %}">&raquo;</a></li>
+   	        {% if page.has_next %}<li><a href="{% url url_name page.next_page_number %}">&raquo;</a></li>{% endif %}
 		
 		<!-- query page -->
 		{% else %}
-			<li><a href="{% url url_name query_id prev_page %}">&laquo;</a></li>
-			{% for idx in page_range %}
+			{% if page.has_previous %}<li><a href="{% url url_name query_id page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			{% for idx in paginator.page_range %}
 				<!-- 是否为选中状态 -->
-				{% if curr_page == idx %}
+				{% if page.number == idx %}
 				<li class="active"><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
 				{% else %}
 				<li><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
-			<li><a href="{% url url_name query_id next_page %}">&raquo;</a></li>
+   	        {% if page.has_next %}<li><a href="{% url url_name query_id page.next_page_number %}">&raquo;</a></li>{% endif %}
 		{% endif %}
 		</ul>
 	</div>
