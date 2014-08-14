@@ -12,15 +12,20 @@
    	</div>
    	
 	<!-- info 列表 -->
-   	<div class="col-md-7">
+   	<div class="col-md-8">
    		{% include "info/_info_list.html"%}
    	</div>
    	
    	<!-- 我的收藏 -->
    	<div class="col-md-4 pull-right">
-	    <div class="panel panel-success">
+	    <div class="panel panel-info">
 			<div class="panel-heading">
-				<h3 class="panel-title"><a>我的收藏</a></h3>
+				<h3 class="panel-title">
+					<a href="{% url "info.fav_list" 1 %}">
+					<span class="glyphicon glyphicon-folder-open"></span>
+					&nbsp;我的收藏
+					</a>
+				</h3>
 			</div>
 			<div class="panel-body">
 				{% include "info/_fav_list.html" with user=request.user%}
@@ -30,9 +35,12 @@
    	
    	<!-- 热门职位-->
    	<div class="col-md-4 pull-right">
-	    <div class="panel panel-success">
+	    <div class="panel panel-info">
 			<div class="panel-heading">
-				<h3 class="panel-title"><a>热门职位</a></h3>
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-fire"></span>
+					热门职位
+				</h3>
 			</div>
 			<div class="panel-body">
 			    {% include "info/_hot_list.html"%}
@@ -41,20 +49,26 @@
    	</div>
    	
     <!-- 分页 -->
-    <div id="pagination" class="col-md-8 col-md-offset-2">
+    <div id="pagination" class="col-md-8">
 		<ul class="pagination">
 		
 		<!-- index page -->
 		{% if query_id == None %}
+			
 			{% if page.has_previous %}<li><a href="{% url url_name page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			<!--
 			{% for idx in paginator.page_range %}
-				<!-- 是否为选中状态 -->
 				{% if page.number == idx %}
 				<li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% else %}
 				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
+			-->
+			
+			
    	        {% if page.has_next %}<li><a href="{% url url_name page.next_page_number %}">&raquo;</a></li>{% endif %}
 		
 		<!-- query page -->

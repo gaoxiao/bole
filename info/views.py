@@ -44,14 +44,14 @@ def query_by_class(request, class_id, page_num):
 公用分页方法
 '''
 def render_with_list(request, all_list, **args):
-    
+
     fav_list = filter_fav_list(all_list, request.user)
     hot_list = all_list.order_by('-view_times')[:10]
 
     paginator = Paginator(all_list, PAGE_SIZE)
     page_num = args['page_num']
     page_num = int(page_num)
-    
+
     context = {
         'paginator' : paginator,
         'page' : paginator.page(page_num),
@@ -74,7 +74,7 @@ def filter_fav_list(all_list, user):
         favourite = Favourite.objects.get(user=user)
     except Favourite.DoesNotExist:
         return None
-    
+
     return all_list.filter(favourite=favourite)
 
 '''
@@ -91,18 +91,45 @@ def add_favourite(request, id, from_url):
         favourite.user = user
         favourite.save()
 
-    # update or create 
+    # update or create
     try:
         favouriteInfo = FavouriteInfo.objects.get(favourite=favourite, info=info)
     except:
         favouriteInfo = FavouriteInfo()
         favouriteInfo.favourite = favourite
         favouriteInfo.info = info
-        
+
     favouriteInfo.add_date = datetime.datetime.now()
     favouriteInfo.save()
-        
+
     return redirect(from_url)
+
+'''
+收藏夹列表
+'''
+@login_required
+def favourite_list(request, page_num):
+    user = request.user
+    try:
+        favourite = Favourite.objects.get(user=user)
+    except Favourite.DoesNotExist:
+        favourite = Favourite()
+        favourite.user = user
+        favourite.save()
+
+    fav_list = favourite.infos.all()
+
+    paginator = Paginator(fav_list, PAGE_SIZE)
+    page_num = int(page_num)
+
+    context = {
+        'paginator' : paginator,
+        'page' : paginator.page(page_num),
+        'fav_list' : fav_list ,
+    }
+
+    return render(request, 'info/fav_list.html', context)
+
 
 '''
 删除收藏
@@ -118,18 +145,40 @@ def rm_favourite(request, id, from_url):
         favourite.user = user
         favourite.save()
 
-    # update or create 
+    # update or create
     try:
         favouriteInfo = FavouriteInfo.objects.get(favourite=favourite, info=info)
     except:
         pass
     favouriteInfo.delete()
-        
+
     return redirect(from_url)
+
+'''
+获取收藏
+'''
+'''
+删除收藏
+'''
+@login_required
+def get_favourite(request, info):
+    user = request.user
+    try:
+        favourite = Favourite.objects.get(user=user)
+    except Favourite.DoesNotExist:
+        return None
+
+    try:
+        favouriteInfo = FavouriteInfo.objects.get(favourite=favourite, info=info)
+    except:
+        return None
+
+    return favouriteInfo
 
 @login_required
 def detail(request, id, from_url):
     info = Info.objects.get(pk=id)
+    favouriteInfo = get_favourite(request, info)
 
     # update view times
     info.view_times += 1
@@ -142,6 +191,7 @@ def detail(request, id, from_url):
         'from_url': from_url,
         'area_num': area_num,
         'class_num': class_num,
+        'favouriteInfo': favouriteInfo
     }
 
     return render(request, 'info/detail.html', context)

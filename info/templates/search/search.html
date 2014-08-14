@@ -11,9 +11,10 @@
    	
 	<!-- info 列表 -->
    	<div class="col-md-8 col-md-offset-2">
-    	{% for result in page.object_list %}
-    	<a href="{% url "info.detail" result.object.pk request.path %}" class="btn btn-default">{{ result.title|safe }}</a>
-    	<hr>
+    	{% for result in page %}
+    	<div class="bs-callout bs-callout-info">
+    	<a href="{% url "info.detail" result.pk request.path %}" style="font-size:20px">{{ result.title|safe }}</a>
+    	</div>
     	{% endfor %}
    	</div>
     

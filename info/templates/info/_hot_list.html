@@ -1,5 +1,5 @@
 {% for info in hot_list %}
 <a href="{% url "info.detail" info.pk request.path %}"><h4>{{info}}</h4></a>
-<a class="btn btn-warning btn-xs" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
+<a class="btn btn-default btn-xs" disabled="disabled">访问次数：{{info.view_times}}</a>
 <hr>
 {% endfor %}

@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^detail/(\d+)/(.*)$', views.detail, name='info.detail'),
     url(r'^add_fav/(\d+)/(.*)$', views.add_favourite, name='info.add_fav'),
     url(r'^rm_fav/(\d+)/(.*)$', views.rm_favourite, name='info.rm_fav'),
+    url(r'^fav_list/(\d+)$', views.favourite_list, name='info.fav_list'),
     url(r'^search$', views.InfoSearchView(), name='info.search')
 )
