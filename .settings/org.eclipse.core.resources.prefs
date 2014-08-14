@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
+encoding//info/templates/info/_fav_list.html=UTF-8
+encoding//info/templates/info/_hot_list.html=UTF-8
+encoding//info/templates/info/_info_list.html=UTF-8
 encoding//info/templates/info/detail.html=UTF-8
 encoding//info/templates/info/list.html=UTF-8
 encoding//info/templates/search/search.html=UTF-8

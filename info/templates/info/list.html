@@ -3,32 +3,41 @@
 {% block body %}
 
 <div id="content-main">
+
 	<!-- search -->
    	<div class="col-md-12" style="margin-top:-30px;margin-bottom:40px">
    		<div class="pull-right">
-	   		<form class="form-inline" role="form" action="{% url "info.search" %}">
-			    <input type="text" class="form-control" id="q" name="q" placeholder="enter key words">
-				<button type="submit" class="btn btn-default">search</button>
-			</form>
+	   		{% include "info/_search.html" %}
 	   	</div>
    	</div>
    	
-   	
 	<!-- info 列表 -->
    	<div class="col-md-7">
-	    {% for info in page %}
-    	<a href="{% url "info.detail" info.pk request.path %}" class="btn btn-default"><h4>{{info}}</h4></a>
-    	<h6>{{info.content|striptags|truncatechars:200}}</h6>
-    	
-    	<!-- 分类信息 -->
-    	<a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.info_area}}</a>
-		<a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
-		
-		<!-- view times -->
-		<a class="btn btn-warning btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
-		<a class="btn btn-warning btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
-    	<hr>
-	    {% endfor %}
+   		{% include "info/_info_list.html"%}
+   	</div>
+   	
+   	<!-- 我的收藏 -->
+   	<div class="col-md-4 pull-right">
+	    <div class="panel panel-success">
+			<div class="panel-heading">
+				<h3 class="panel-title"><a>我的收藏</a></h3>
+			</div>
+			<div class="panel-body">
+				{% include "info/_fav_list.html" with user=request.user%}
+			</div>
+		</div>
+   	</div>
+   	
+   	<!-- 热门职位-->
+   	<div class="col-md-4 pull-right">
+	    <div class="panel panel-success">
+			<div class="panel-heading">
+				<h3 class="panel-title"><a>热门职位</a></h3>
+			</div>
+			<div class="panel-body">
+			    {% include "info/_hot_list.html"%}
+			</div>
+		</div>
    	</div>
    	
     <!-- 分页 -->
@@ -64,5 +73,11 @@
 		</ul>
 	</div>
 </div>
+{% endblock %}
 
+{% block extra_script %}
+    <!-- 激活tooltip -->
+	<script type="text/javascript">
+	$('.btn-default').tooltip()
+	</script>
 {% endblock %}

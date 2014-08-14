@@ -1,0 +1,27 @@
+{% for info in page %}
+
+	<a href="{% url "info.detail" info.pk request.path %}" class="btn btn-default"><h4>{{info|truncatechars:"25"}}</h4></a>
+	
+	{% if fav_list and info in fav_list %}
+	<a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default btn-xs pull-right" 
+		data-toggle="tooltip" data-placement="top" title="点击取消">
+		已收藏
+	</a>
+	{% else %}
+	<a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-warning btn-xs pull-right" 
+		data-toggle="tooltip" data-placement="top" title="点击收藏">
+		收藏
+	</a>
+	{% endif %}
+	
+	<h6>{{info.content|striptags|truncatechars:200}}</h6>
+	
+	<!-- 分类信息 -->
+	<a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.info_area}}</a>
+	<a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
+	
+
+	<a class="btn btn-warning btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
+	<a class="btn btn-warning btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
+	<hr>
+{% endfor %}

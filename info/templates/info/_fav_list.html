@@ -1,0 +1,12 @@
+{% if user.is_authenticated %}
+	{% for info in fav_list.all %}
+	<a href="{% url "info.detail" info.pk request.path %}"><h4>{{info}}</h4></a>
+	<hr>
+	{% endfor %}
+	{% url "account_login" as login_url %}
+{% else %}
+    {% url "account_login" as login_url %}
+    {% url "account_signup" as signup_url %}
+	<p>请 <a href="{{ login_url }}" class="btn btn-default">登录</a> 或  <a href="{{ signup_url }}" class="btn btn-primary">注册</a> 后查看收藏</p>
+{% endif %}
+
