@@ -2,15 +2,16 @@
 
 # Create your views here.
 from info.models import Info
+from info.form import SearchForm
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
 from django.core.cache import cache
 from haystack.views import SearchView
 
 
 
-PAGE_SIZE = 20
+PAGE_SIZE = 10
 CACHE_PREFIX = 'local_'
 CACHE_TIME = 60 * 60
 
@@ -51,27 +52,15 @@ def render_with_list(request, all_list, **args):
     page_num = args['page_num']
     page_num = int(page_num)
 
-    try:
-        info_list = paginator.page(page_num)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        info_list = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        info_list = paginator.page(paginator.num_pages)
+    context = {
+        'paginator' : paginator,
+        'page' : paginator.page(page_num),
+        'url_name' : args['url_name'],
+        'query_id' : args.get('query_id'),
+        'form' : SearchForm()
+    }
 
-    prev_page = page_num - 1 if page_num > 1 else page_num
-    next_page = page_num + 1 if page_num < paginator.num_pages else page_num
-
-    return render(request, 'info/list.html',
-                  {'info_list' : info_list,
-                   'page_range' : paginator.page_range,
-                   'prev_page' : prev_page,
-                   'next_page' : next_page,
-                   'curr_page' : page_num,
-                   'url_name' : args['url_name'],
-                   'query_id' : args.get('query_id')
-                   })
+    return render(request, 'info/list.html', context)
 
 @login_required
 def detail(request, id, from_url):
@@ -83,12 +72,14 @@ def detail(request, id, from_url):
 
     area_num, class_num = get_from_cache(info)
 
-    return render(request, 'info/detail.html',
-                  {'info' : info,
-                   'from_url' : from_url,
-                   'area_num' : area_num,
-                   'class_num' : class_num,
-                   })
+    context = {
+        'info': info,
+        'from_url': from_url,
+        'area_num': area_num,
+        'class_num': class_num,
+    }
+
+    return render(request, 'info/detail.html', context)
 
 def get_from_cache(info):
     key = CACHE_PREFIX + str(info.pk)
@@ -101,8 +92,11 @@ def get_from_cache(info):
 
 
 class InfoSearchView(SearchView):
-    
+
     def create_response(self):
+
+        self.results_per_page = PAGE_SIZE
+
         """
         Generates the actual HttpResponse to send back to the user.
         """
