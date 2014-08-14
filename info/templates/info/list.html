@@ -4,7 +4,7 @@
 
 <div id="content-main">
 	<!-- search -->
-   	<div class="col-md-8 col-md-offset-2" style="margin-top:-30px;margin-bottom:40px">
+   	<div class="col-md-12" style="margin-top:-30px;margin-bottom:40px">
    		<div class="pull-right">
 	   		<form class="form-inline" role="form" action="{% url "info.search" %}">
 			    <input type="text" class="form-control" id="q" name="q" placeholder="enter key words">
@@ -13,9 +13,10 @@
 	   	</div>
    	</div>
    	
+   	
 	<!-- info 列表 -->
+   	<div class="col-md-7">
     {% for info in info_list %}
-   	<div class="col-md-8 col-md-offset-2">
     	<a href="{% url "info.detail" info.pk request.path %}" class="btn btn-default"><h4>{{info}}</h4></a>
     	<h6>{{info.content|striptags|truncatechars:200}}</h6>
     	
@@ -27,8 +28,25 @@
 		<a class="btn btn-warning btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
 		<a class="btn btn-warning btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
     	<hr>
-   	</div>
     {% endfor %}
+   	</div>
+   	
+   	<div class="col-md-4 pull-right">
+    {% for info in info_list %}
+    	<a href="{% url "info.detail" info.pk request.path %}"><h4>{{info}}</h4></a>
+    	<h6>{{info.content|striptags|truncatechars:200}}</h6>
+    	
+    	<!-- 分类信息 -->
+    	<a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.info_area}}</a>
+		<a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
+		
+		<!-- view times -->
+		<a class="btn btn-warning btn-xs pull-right" disabled="disabled">访问次数：<span class="badge" >{{info.view_times}}</span></a>
+		<a class="btn btn-warning btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
+    	<hr>
+    {% endfor %}
+   	</div>
+   	
     
     <!-- 分页 -->
     <div id="pagination" class="col-md-8 col-md-offset-2">

@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//info/templates/info/detail.html=UTF-8
+encoding//info/templates/info/list.html=UTF-8
+encoding//info/templates/search/search.html=UTF-8
+encoding//info/urls.py=utf-8
+encoding//info/views.py=utf-8
+encoding//templates/_account_bar.html=UTF-8
+encoding//templates/site_base.html=UTF-8
+encoding/<project>=UTF-8

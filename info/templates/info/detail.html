@@ -4,7 +4,9 @@
 <div id="content-main">
    	<div class="col-md-10 col-md-offset-1">
 		<div id="navi" class="row">
-		   		<a href="{{from_url}}" class="btn btn-danger large">返回</a>
+		   		<a href="{{from_url}}" class="btn btn-danger large">
+		   			<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;返回
+		   		</a>
 		   		<!-- 分类信息 -->
 		    	<a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info">
 		    		地区：{{info.info_area}} <span class="badge">{{area_num}}</span>
