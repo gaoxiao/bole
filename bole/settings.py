@@ -1,3 +1,5 @@
+# coding:utf-8
+
 """
 Django settings for bole project.
 
@@ -28,9 +30,18 @@ ALLOWED_HOSTS = []
 
 
 # List of callables that know how to import templates from various sources.
+'''
+filesystem需要添加在app_directories之前，
+否则，TEMPLATE_DIRS指定的tempalte优先级低于account和theme
+'''
 TEMPLATE_LOADERS = [
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader",
+]
+
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, "templates"),
+    os.path.join(BASE_DIR, "info/templates"),
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = [
@@ -43,11 +54,13 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
 
+
     "account.context_processors.account",
     "pinax_theme_bootstrap.context_processors.theme",
-    
+
     # app
     "info.views.append_info",
+
 ]
 
 
@@ -73,10 +86,6 @@ INSTALLED_APPS = (
 
     'info'
 )
-
-TEMPLATE_DIRS = [
-    os.path.join(BASE_DIR, "templates"),
-]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,11 +137,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-
-TEMPLATE_DIRS = [
-    os.path.join(BASE_DIR, "templates"),
-]
 
 
 STATIC_URL = '/static/'
