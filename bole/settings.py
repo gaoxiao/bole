@@ -45,6 +45,9 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
     "account.context_processors.account",
     "pinax_theme_bootstrap.context_processors.theme",
+    
+    # app
+    "info.views.append_info",
 ]
 
 

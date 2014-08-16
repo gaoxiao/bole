@@ -3,14 +3,6 @@
 {% block body %}
 
 <div id="content-main">
-
-	<!-- search -->
-   	<div class="col-md-12" style="margin-top:-30px;margin-bottom:40px">
-   		<div class="pull-right">
-	   		{% include "info/_search.html" %}
-	   	</div>
-   	</div>
-   	
 	<!-- info 列表 -->
    	<div class="col-md-12">
    		{% include "info/_info_list.html"%}
@@ -21,6 +13,9 @@
 		<ul class="pagination">
 		{% with url_name="info.fav_list" %}
 			{% if page.has_previous %}<li><a href="{% url url_name page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			{% comment %}  
 			{% for idx in paginator.page_range %}
 				<!-- 是否为选中状态 -->
 				{% if page.number == idx %}
@@ -29,6 +24,8 @@
 				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
+			{% endcomment %}
+			
    	        {% if page.has_next %}<li><a href="{% url url_name page.next_page_number %}">&raquo;</a></li>{% endif %}
    	    {% endwith %}
 		</ul>

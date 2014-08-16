@@ -4,11 +4,6 @@
 
 
 <div id="content-main">
-	<!-- search -->
-   	<div class="col-md-8 col-md-offset-2" style="margin-top:-30px;margin-bottom:40px">
-   		{% include "info/_search.html" %}
-   	</div>
-   	
 	<!-- info 列表 -->
    	<div class="col-md-8 col-md-offset-2">
     	{% for result in page %}
@@ -25,6 +20,9 @@
     <div id="pagination" class="col-md-8 col-md-offset-2">
 		<ul class="pagination">
 			{% if page.has_previous %}<li><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			{% comment %}  
 			{% for idx in paginator.page_range %}
 				<!-- 是否为选中状态 -->
 				{% if page.number == idx %}
@@ -33,6 +31,8 @@
 				<li><a href="?q={{ query }}&amp;page={{ idx }}">{{ idx }}</a></li>
 				{% endif %}
 			{% endfor %}
+			{% endcomment %}
+			
    	        {% if page.has_next %}<li><a href="?q={{ query }}&amp;page={{ page.next_page_number }}">&raquo;</a></li>{% endif %}
 		</ul>
 	</div>

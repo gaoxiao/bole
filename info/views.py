@@ -1,20 +1,21 @@
 # coding:utf-8
 
 # Create your views here.
-from info.models import Info, Favourite, FavouriteInfo
+from info.models import *
 from info.form import SearchForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.cache import cache
 from haystack.views import SearchView
-from _mysql_exceptions import IntegrityError
 import datetime
 
 
 
 PAGE_SIZE = 10
 CACHE_PREFIX = 'local_'
+CLASS_CACHE_KEY = 'local_class'
+AREA_CACHE_KEY = 'local_area'
 CACHE_TIME = 60 * 60
 
 def index(request):
@@ -198,19 +199,6 @@ def detail(request, id, from_url):
 
 
 '''
-缓存每个area和class对应的info数目
-'''
-def get_from_cache(info):
-    key = CACHE_PREFIX + str(info.pk)
-    tuple = cache.get(key)
-    if not tuple:
-        tuple = (info.info_area.info_set.count(),
-                 info.info_class.info_set.count())
-        cache.set(key, tuple, CACHE_TIME)
-    return tuple
-
-
-'''
 search view
 '''
 class InfoSearchView(SearchView):
@@ -237,3 +225,36 @@ class InfoSearchView(SearchView):
 
         context.update(self.extra_context())
         return render(self.request, self.template, context)
+
+
+'''
+request processors that return dictionaries to be merged into a
+template context
+
+add class and area list to template context
+'''
+def append_info(request):
+    area_list = cache.get(AREA_CACHE_KEY)
+    if not area_list:
+        area_list = InfoArea.objects.all()
+        cache.set(AREA_CACHE_KEY, area_list, CACHE_TIME)
+        
+    class_list = cache.get(CLASS_CACHE_KEY)
+    if not class_list:
+        class_list = InfoClass.objects.all()
+        cache.set(CLASS_CACHE_KEY, class_list, CACHE_TIME)
+
+    return {"area_list" : area_list, "class_list" : class_list}
+
+
+'''
+缓存每个area和class对应的info数目
+'''
+def get_from_cache(info):
+    key = CACHE_PREFIX + str(info.pk)
+    tuple = cache.get(key)
+    if not tuple:
+        tuple = (info.info_area.info_set.count(),
+                 info.info_class.info_set.count())
+        cache.set(key, tuple, CACHE_TIME)
+    return tuple
