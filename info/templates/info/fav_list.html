@@ -1,0 +1,41 @@
+{% extends "info_base.html" %}
+
+{% block body %}
+
+<div id="content-main">
+	<!-- info 列表 -->
+   	<div class="col-md-12">
+   		{% include "info/_info_list.html"%}
+   	</div>
+   	
+    <!-- 分页 -->
+    <div id="pagination" class="col-md-12">
+		<ul class="pagination">
+		{% with url_name="info.fav_list" %}
+			{% if page.has_previous %}<li><a href="{% url url_name page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			{% comment %}  
+			{% for idx in paginator.page_range %}
+				<!-- 是否为选中状态 -->
+				{% if page.number == idx %}
+				<li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
+				{% else %}
+				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
+				{% endif %}
+			{% endfor %}
+			{% endcomment %}
+			
+   	        {% if page.has_next %}<li><a href="{% url url_name page.next_page_number %}">&raquo;</a></li>{% endif %}
+   	    {% endwith %}
+		</ul>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+    <!-- 激活tooltip -->
+	<script type="text/javascript">
+	$('.btn-default').tooltip()
+	</script>
+{% endblock %}

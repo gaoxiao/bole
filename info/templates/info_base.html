@@ -1,0 +1,39 @@
+{% extends "site_base.html" %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block site_brand %}
+<ul class="nav navbar-nav">
+	<p class="navbar-text" style="margin-top:10px;margin-bottom:10px">
+	<a href="{% url "info.index" %}" class="btn btn-success" style="width:100px"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;主页</a>
+	</p>
+</ul>
+{% endblock %}
+
+{% block nav %}
+	{% include "_navi.html" %}
+	
+	{% include "_account_bar.html" %}
+	
+	<!-- search -->
+	<form class="navbar-form navbar-right" role="search" action="{% url "info.search" %}">
+	    <input type="text" class="form-control" id="q" name="q" placeholder="enter key words" value="{{ query }}"/>
+		<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+	</form>
+{% endblock %}
+
+
+
+{% block account_bar %}
+{% comment %} 放在上面 {% endcomment %}
+{% endblock %}
+
+{% block body%}
+{% endblock %}
+
+
+{% block footer %}
+    {% include "_footer.html" %}
+{% endblock %}
+

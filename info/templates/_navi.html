@@ -1,0 +1,20 @@
+<ul class="nav navbar-nav">
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">城市 <span class="caret"></span></a>
+		<ul class="dropdown-menu" role="menu">
+		{% for o in area_list %}
+			<li><a href="{% url "info.by_area" o.pk 1 %}">{{ o.areaName }}</a></li>
+		{% endfor %}
+		</ul>
+	</li>
+</ul>
+<ul class="nav navbar-nav">
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">类别  <span class="caret"></span></a>
+		<ul class="dropdown-menu" role="menu">
+		{% for o in class_list %}
+			<li><a href="{% url "info.by_class" o.pk 1 %}">{{ o.className }}</a></li>
+		{% endfor %}
+		</ul>
+	</li>
+</ul>

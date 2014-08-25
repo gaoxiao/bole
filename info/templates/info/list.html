@@ -1,55 +1,93 @@
-{% extends "site_base.html" %}
+{% extends "info_base.html" %}
 
 {% block body %}
+
 <div id="content-main">
 	<!-- info 列表 -->
-    {% for info in info_list %}
-   	<div class="col-md-8 col-md-offset-2">
-    	<h3><a href="{% url "info.detail" info.pk request.path %}">{{info}}</a></h3>
-    	<h6>{{info.content|truncatechars:200}}</h6>
-    	
-    	<!-- 分类信息 -->
-    	<a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.info_area}}</a>
-		<a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
-		
-		<!-- view times -->
-		<a class="btn btn-info btn-xs pull-right">访问次数：<span class="badge">{{info.view_times}}</span></a>
-    	<hr>
+   	<div class="col-md-8">
+   		{% include "info/_info_list.html"%}
    	</div>
-    {% endfor %}
-    
+   	
+   	<!-- 我的收藏 -->
+   	<div class="col-md-4 pull-right">
+	    <div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<a href="{% url "info.fav_list" 1 %}">
+					<span class="glyphicon glyphicon-folder-open"></span>
+					&nbsp;我的收藏
+					</a>
+				</h3>
+			</div>
+			<div class="panel-body">
+				{% include "info/_fav_list.html" with user=request.user%}
+			</div>
+		</div>
+   	</div>
+   	
+   	<!-- 热门职位-->
+   	<div class="col-md-4 pull-right">
+	    <div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-fire"></span>
+					热门职位
+				</h3>
+			</div>
+			<div class="panel-body">
+			    {% include "info/_hot_list.html"%}
+			</div>
+		</div>
+   	</div>
+   	
     <!-- 分页 -->
-    <div id="pagination" class="col-md-8 col-md-offset-2">
+    <div id="pagination" class="col-md-8">
 		<ul class="pagination">
 		
 		<!-- index page -->
 		{% if query_id == None %}
-			<li><a href="{% url url_name prev_page %}">&laquo;</a></li>
-			{% for idx in page_range %}
-				<!-- 是否为选中状态 -->
-				{% if curr_page == idx %}
+			
+			{% if page.has_previous %}<li><a href="{% url url_name page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			{% comment %}  
+			{% for idx in paginator.page_range %}
+				{% if page.number == idx %}
 				<li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% else %}
 				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
-			<li><a href="{% url url_name next_page %}">&raquo;</a></li>
+			{% endcomment %}
+			
+   	        {% if page.has_next %}<li><a href="{% url url_name page.next_page_number %}">&raquo;</a></li>{% endif %}
 		
 		<!-- query page -->
 		{% else %}
-			<li><a href="{% url url_name query_id prev_page %}">&laquo;</a></li>
-			{% for idx in page_range %}
+			{% if page.has_previous %}<li><a href="{% url url_name query_id page.previous_page_number %}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			{% comment %}  
+			{% for idx in paginator.page_range %}
 				<!-- 是否为选中状态 -->
-				{% if curr_page == idx %}
+				{% if page.number == idx %}
 				<li class="active"><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
 				{% else %}
 				<li><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
 				{% endif %}
 			{% endfor %}
-			<li><a href="{% url url_name query_id next_page %}">&raquo;</a></li>
+			{% endcomment %}
+			
+   	        {% if page.has_next %}<li><a href="{% url url_name query_id page.next_page_number %}">&raquo;</a></li>{% endif %}
 		{% endif %}
 		</ul>
 	</div>
 </div>
+{% endblock %}
 
+{% block extra_script %}
+    <!-- 激活tooltip -->
+	<script type="text/javascript">
+	$('.btn-default').tooltip()
+	</script>
 {% endblock %}

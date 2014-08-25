@@ -1,1 +1,3 @@
 *.pyc
+/bole/whoosh_index
+/.settings/*

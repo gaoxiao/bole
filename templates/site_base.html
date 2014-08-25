@@ -1,24 +1,30 @@
-{% extends "theme_base.html" %}
+{% extends "theme_bootstrap/base.html" %}
 
 {% load staticfiles %}
 {% load i18n %}
 
-
 {% block style_base %}
     <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/site.css" %}" rel="stylesheet">
+    <link href="{% static "css/docs.css" %}" rel="stylesheet">
     {% block extra_style %}{% endblock %}
 {% endblock %}
 
+{% block site_brand %}
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block account_bar %}
+{% endblock %}
 
 {% block body%}
 {% endblock %}
 
-
 {% block footer %}
     {% include "_footer.html" %}
 {% endblock %}
-
 
 {% block script_base %}
     <script src="{% block jquery_src %}{% static "pinax/js/jquery.js" %}{% endblock %}"></script>

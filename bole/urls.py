@@ -12,4 +12,6 @@ urlpatterns = patterns('',
 
     url(r"^accounts/", include("account.urls")),
     url(r"^$", TemplateView.as_view(template_name="homepage.html"), name="home"),
+
+    url(r'^search/', include('haystack.urls')),
 )

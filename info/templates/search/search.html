@@ -1,0 +1,40 @@
+{% extends 'info_base.html' %}
+
+{% block body %}
+<div id="content-main">
+	<!-- info 列表 -->
+   	<div class="col-md-8 col-md-offset-2">
+    	{% for result in page %}
+    	<div class="bs-callout bs-callout-info">
+    	<a href="{% url "info.detail" result.pk request.path %}" style="font-size:20px">{{ result.title|safe }}</a>
+    	</div>
+    	{% endfor %}
+   	</div>
+    
+    
+    
+    <!-- 分页 -->
+    {% if page.object_list %}
+    <div id="pagination" class="col-md-8 col-md-offset-2">
+		<ul class="pagination">
+			{% if page.has_previous %}<li><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">&laquo;</a></li>{% endif %}
+			<li><a>Page {{ page.number }} of {{ paginator.num_pages }}</a></li>
+			
+			{% comment %}  
+			{% for idx in paginator.page_range %}
+				<!-- 是否为选中状态 -->
+				{% if page.number == idx %}
+				<li class="active"><a href="?q={{ query }}&amp;page={{ idx }}">{{ idx }}</a></li>
+				{% else %}
+				<li><a href="?q={{ query }}&amp;page={{ idx }}">{{ idx }}</a></li>
+				{% endif %}
+			{% endfor %}
+			{% endcomment %}
+			
+   	        {% if page.has_next %}<li><a href="?q={{ query }}&amp;page={{ page.next_page_number }}">&raquo;</a></li>{% endif %}
+		</ul>
+	</div>
+	{% endif %}
+    
+</div>
+{% endblock %}
