@@ -15,6 +15,11 @@ class InfoClass(models.Model):
     className = models.CharField(max_length=100)
     def __unicode__(self):
         return self.className
+    
+class InfoLocation(models.Model):
+    location = models.CharField(max_length = 100)
+    def __unicode__(self):
+        return self.location
 
 class Info(models.Model):
     title = models.CharField(max_length=200)
@@ -23,6 +28,7 @@ class Info(models.Model):
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     info_area = models.ForeignKey(InfoArea)
     info_class = models.ForeignKey(InfoClass)
+    info_location = models.ManyToManyField(InfoLocation, verbose_name="work city")
     def __unicode__(self):
         return self.title
     
