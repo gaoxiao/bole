@@ -113,7 +113,7 @@ WSGI_APPLICATION = 'bole.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'bole',
         'USER': 'root',
         'PASSWORD': 'root',
