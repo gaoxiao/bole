@@ -3,6 +3,10 @@
 {% load staticfiles %}
 {% load i18n %}
 
+{% block extra_head %}
+    <meta property="wb:webmaster" content="e88fc22b95ef9ad5" />
+{% endblock %}
+
 {% block style_base %}
     <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/site.css" %}" rel="stylesheet">
