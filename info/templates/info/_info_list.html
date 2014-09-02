@@ -5,28 +5,32 @@
 
 	<!-- 收藏信息 -->
 	{% if fav_list and info in fav_list %}
-	<a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default btn-xs pull-right" 
+        <a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default btn-xs pull-right"
 		data-toggle="tooltip" data-placement="top" title="点击取消">
-		已收藏
-	</a>
-	{% else %}
-	<a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-danger btn-xs pull-right" 
+            已收藏
+        </a>
+    {% else %}
+        <a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-danger btn-xs pull-right"
 		data-toggle="tooltip" data-placement="top" title="点击收藏">
-		<span class="glyphicon glyphicon-heart"></span>
-		 收藏
-	</a>
-	{% endif %}
-	
-	<h6>{{info.content|striptags|truncatechars:200}}</h6>
-	
-	
-	<!-- 分类信息 -->
-	{% if info.info_area %}
-	<a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.info_area}}</a>
-	<a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
-	
-	<a class="btn btn-default btn-xs pull-right" disabled="disabled">访问次数：{{info.view_times}}</a>
-	<a class="btn btn-default btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
-	{% endif %}
+            <span class="glyphicon glyphicon-heart"></span>
+            收藏
+        </a>
+    {% endif %}
+
+    {% comment %}分享到微博{% endcomment %}
+    {% with content=info|truncatechars:"25" %}
+        <wb:share-button appkey="11psLc" addition="number" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
+    {% endwith %}
+
+    <h6>{{info.content|striptags|truncatechars:200}}</h6>
+
+    <!-- 分类信息 -->
+    {% if info.info_area %}
+        <a href="{% url "info.by_area" info.info_area.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.info_area}}</a>
+        <a href="{% url "info.by_class" info.info_class.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.info_class}}</a>
+
+        <a class="btn btn-default btn-xs pull-right" disabled="disabled">访问次数：{{info.view_times}}</a>
+        <a class="btn btn-default btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
+    {% endif %}
 </div>
 {% endfor %}
