@@ -28,6 +28,13 @@
 				 收藏
 			</a>
 			{% endif %}
+
+            {% comment %}分享到微博{% endcomment %}
+            {% with content=info|truncatechars:"80" %}
+                <div class="pull-right" style="margin-top: 6px">
+                    <wb:share-button appkey="11psLc" addition="number" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
+                </div>
+            {% endwith %}
 		</div>
 		<br>
 	   	<div class="row">

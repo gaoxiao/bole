@@ -18,8 +18,8 @@
     {% endif %}
 
     {% comment %}分享到微博{% endcomment %}
-    {% with content=info|truncatechars:"25" %}
-        <wb:share-button appkey="11psLc" addition="number" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
+    {% with content=info|truncatechars:"80" %}
+        <wb:share-button appkey="11psLc" addition="simple" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
     {% endwith %}
 
     <h6>{{info.content|striptags|truncatechars:200}}</h6>
