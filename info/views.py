@@ -178,6 +178,8 @@ def get_favourite(request, info):
 
 @login_required
 def detail(request, id, from_url):
+    if not from_url.startswith('/'):
+        from_url  = '/' + from_url
     info = Info.objects.get(pk=id)
     favouriteInfo = get_favourite(request, info)
 
