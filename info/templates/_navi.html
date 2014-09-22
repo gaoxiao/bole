@@ -1,19 +1,28 @@
 <ul class="nav navbar-nav">
 	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">城市 <span class="caret"></span></a>
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">工作地点 <span class="caret"></span></a>
 		<ul class="dropdown-menu" role="menu">
-		{% for o in area_list %}
-			<li><a href="{% url "info.by_area" o.pk 1 %}">{{ o.areaName }}</a></li>
+		{% for o in location_list %}
+			<li><a href="{% url "info.by_location" o.pk 1 %}">{{ o.location }}</a></li>
 		{% endfor %}
 		</ul>
 	</li>
 </ul>
 <ul class="nav navbar-nav">
 	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">类别  <span class="caret"></span></a>
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">职位类别  <span class="caret"></span></a>
 		<ul class="dropdown-menu" role="menu">
-		{% for o in class_list %}
-			<li><a href="{% url "info.by_class" o.pk 1 %}">{{ o.className }}</a></li>
+		{% for first, second_list in category_map.items %}
+			<li class="menu-item dropdown dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ first }}</a>
+                <ul class="dropdown-menu">
+                    {% for second in second_list %}
+                    <li class="menu-item ">
+                        <a href="{% url "info.by_category" second.pk 1 %}">{{ second }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
 		{% endfor %}
 		</ul>
 	</li>

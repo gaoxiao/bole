@@ -3,5 +3,6 @@ from info.models import *
 
 # Register your models here.
 admin.site.register(Info)
-admin.site.register(InfoArea)
-admin.site.register(InfoClass)
+admin.site.register(WorkLocation)
+admin.site.register(WorkCategory)
+admin.site.register(WorkNature)

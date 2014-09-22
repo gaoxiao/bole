@@ -11,41 +11,44 @@ from haystack.views import SearchView
 import datetime
 
 
-
 PAGE_SIZE = 10
 CACHE_PREFIX = 'local_'
 CLASS_CACHE_KEY = 'local_class'
 AREA_CACHE_KEY = 'local_area'
 CACHE_TIME = 60 * 60
 
+
 def index(request):
     return list(request, 1)
+
 
 def list(request, page_num):
     all_list = Info.objects.order_by('-pub_date')
     return render_with_list(request, all_list,
                             page_num=page_num,
-                            url_name='info.list',)
+                            url_name='info.list', )
 
-def query_by_area(request, area_id, page_num):
-    all_list = Info.objects.filter(info_area__pk=area_id).order_by('-pub_date')
+
+def query_by_location(request, location_id, page_num):
+    all_list = Info.objects.filter(work_location__pk=location_id).order_by('-pub_date')
     return render_with_list(request, all_list,
                             page_num=page_num,
-                            url_name='info.by_area',
-                            query_id=area_id,)
+                            url_name='info.by_location',
+                            query_id=location_id, )
 
-def query_by_class(request, class_id, page_num):
-    all_list = Info.objects.filter(info_class__pk=class_id).order_by('-pub_date')
+
+def query_by_category(request, category_id, page_num):
+    all_list = Info.objects.filter(work_category__pk=category_id).order_by('-pub_date')
     return render_with_list(request, all_list,
                             page_num=page_num,
-                            url_name='info.by_class',
-                            query_id=class_id,)
+                            url_name='info.by_category',
+                            query_id=category_id, )
 
-'''
-公用分页方法
-'''
+
 def render_with_list(request, all_list, **args):
-
+    '''
+    公用分页方法
+    '''
     fav_list = filter_fav_list(all_list, request.user)
     hot_list = all_list.order_by('-view_times')[:10]
 
@@ -54,21 +57,22 @@ def render_with_list(request, all_list, **args):
     page_num = int(page_num)
 
     context = {
-        'paginator' : paginator,
-        'page' : paginator.page(page_num),
-        'url_name' : args['url_name'],
-        'query_id' : args.get('query_id'),
-        'hot_list' : hot_list,
-        'fav_list' : fav_list,
-        'form' : SearchForm()
+        'paginator': paginator,
+        'page': paginator.page(page_num),
+        'url_name': args['url_name'],
+        'query_id': args.get('query_id'),
+        'hot_list': hot_list,
+        'fav_list': fav_list,
+        'form': SearchForm()
     }
 
     return render(request, 'info/list.html', context)
 
-'''
-从all_list过滤出fav_list
-'''
+
 def filter_fav_list(all_list, user):
+    '''
+    从all_list过滤出fav_list
+    '''
     if not user or not user.is_authenticated():
         return None
     try:
@@ -78,11 +82,12 @@ def filter_fav_list(all_list, user):
 
     return all_list.filter(favourite=favourite)
 
-'''
-添加到收藏夹
-'''
+
 @login_required
 def add_favourite(request, id, from_url):
+    '''
+    添加到收藏夹
+    '''
     info = Info.objects.get(pk=id)
     user = request.user
     try:
@@ -105,11 +110,12 @@ def add_favourite(request, id, from_url):
 
     return redirect(from_url)
 
-'''
-收藏夹列表
-'''
+
 @login_required
 def favourite_list(request, page_num):
+    '''
+    收藏夹列表
+    '''
     user = request.user
     try:
         favourite = Favourite.objects.get(user=user)
@@ -124,19 +130,19 @@ def favourite_list(request, page_num):
     page_num = int(page_num)
 
     context = {
-        'paginator' : paginator,
-        'page' : paginator.page(page_num),
-        'fav_list' : fav_list ,
+        'paginator': paginator,
+        'page': paginator.page(page_num),
+        'fav_list': fav_list,
     }
 
     return render(request, 'info/fav_list.html', context)
 
 
-'''
-删除收藏
-'''
 @login_required
 def rm_favourite(request, id, from_url):
+    '''
+    删除收藏
+    '''
     info = Info.objects.get(pk=id)
     user = request.user
     try:
@@ -155,14 +161,12 @@ def rm_favourite(request, id, from_url):
 
     return redirect(from_url)
 
-'''
-获取收藏
-'''
-'''
-删除收藏
-'''
+
 @login_required
 def get_favourite(request, info):
+    '''
+    获取收藏
+    '''
     user = request.user
     try:
         favourite = Favourite.objects.get(user=user)
@@ -176,10 +180,11 @@ def get_favourite(request, info):
 
     return favouriteInfo
 
+
 @login_required
 def detail(request, id, from_url):
     if not from_url.startswith('/'):
-        from_url  = '/' + from_url
+        from_url = '/' + from_url
     info = Info.objects.get(pk=id)
     favouriteInfo = get_favourite(request, info)
 
@@ -187,26 +192,24 @@ def detail(request, id, from_url):
     info.view_times += 1
     info.save()
 
-    area_num, class_num = get_from_cache(info)
+    category_num = get_from_cache(info)
 
     context = {
         'info': info,
         'from_url': from_url,
-        'area_num': area_num,
-        'class_num': class_num,
+        'category_num': category_num,
         'favouriteInfo': favouriteInfo
     }
 
     return render(request, 'info/detail.html', context)
 
 
-'''
-search view
-'''
 class InfoSearchView(SearchView):
+    '''
+    search view
+    '''
 
     def create_response(self):
-
         self.results_per_page = PAGE_SIZE
 
         """
@@ -229,34 +232,43 @@ class InfoSearchView(SearchView):
         return render(self.request, self.template, context)
 
 
-'''
-request processors that return dictionaries to be merged into a
-template context
-
-add class and area list to template context
-'''
 def append_info(request):
-    area_list = cache.get(AREA_CACHE_KEY)
-    if not area_list:
-        area_list = InfoArea.objects.all()
-        cache.set(AREA_CACHE_KEY, area_list, CACHE_TIME)
-        
-    class_list = cache.get(CLASS_CACHE_KEY)
-    if not class_list:
-        class_list = InfoClass.objects.all()
-        cache.set(CLASS_CACHE_KEY, class_list, CACHE_TIME)
+    '''
+    request processors that return dictionaries to be merged into a
+    template context
 
-    return {"area_list" : area_list, "class_list" : class_list}
+    add location and category list to template context
+    '''
+    location_list = cache.get(AREA_CACHE_KEY)
+    if not location_list:
+        location_list = WorkLocation.objects.all()
+        cache.set(AREA_CACHE_KEY, location_list, CACHE_TIME)
+
+    category_map = cache.get(CLASS_CACHE_KEY)
+    if not category_map:
+        all_category = WorkCategory.objects.all()
+        category_map = {}
+        # first level
+        for c in all_category:
+            if not c.parent:
+                category_map[c] = []
+        # second level
+        for c in all_category:
+            if c.parent:
+                category_map[c.parent].append(c)
+
+        cache.set(CLASS_CACHE_KEY, category_map, CACHE_TIME)
+
+    return {"location_list": location_list, "category_map": category_map}
 
 
-'''
-缓存每个area和class对应的info数目
-'''
 def get_from_cache(info):
+    '''
+    缓存每个category对应的info数目
+    '''
     key = CACHE_PREFIX + str(info.pk)
-    tuple = cache.get(key)
-    if not tuple:
-        tuple = (info.info_area.info_set.count(),
-                 info.info_class.info_set.count())
-        cache.set(key, tuple, CACHE_TIME)
-    return tuple
+    val = cache.get(key)
+    if not val:
+        val = info.work_category.info_set.count()
+        cache.set(key, val, CACHE_TIME)
+    return val
