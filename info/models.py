@@ -31,8 +31,8 @@ class WorkNature(models.Model):
 
 class Info(models.Model):
     title = models.CharField(max_length=200)
-    work_experience = models.CharField(max_length=200)
-    degree = models.CharField(max_length=200)
+    work_experience = models.CharField(max_length=200, blank=True, null=True)
+    degree = models.CharField(max_length=200, blank=True, null=True)
 
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     effective_date = models.DateTimeField('effective date',  blank=True, null=True)
@@ -40,8 +40,8 @@ class Info(models.Model):
 
     recruit_number = models.IntegerField(default=0)
 
-    requirement = models.TextField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    requirement = models.TextField()
+    description = models.TextField()
     view_times = models.IntegerField(default=0)
 
     work_nature = models.ForeignKey(WorkNature)
