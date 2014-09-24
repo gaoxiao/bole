@@ -40,8 +40,8 @@ class Info(models.Model):
 
     recruit_number = models.IntegerField(default=0)
 
-    requirement = models.TextField()
-    description = models.TextField()
+    requirement = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     view_times = models.IntegerField(default=0)
 
     work_nature = models.ForeignKey(WorkNature)
