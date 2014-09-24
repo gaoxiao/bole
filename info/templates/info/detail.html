@@ -58,8 +58,20 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{ info.work_experience }}</td>
-                        <td>{{ info.degree }}</td>
+                        <td>
+                            {% if info.work_experience %}
+                                {{ info.work_experience }}
+                            {% else %}
+                                无要求
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if info.degree %}
+                                {{ info.degree }}
+                            {% else %}
+                                无要求
+                            {% endif %}
+                        </td>
                         <td>
                             {% if info.recruit_number > 0 %}
                                 {{ info.recruit_number }}
