@@ -1,118 +1,81 @@
 {% extends "info_base.html" %}
 
-
 {% block head_title %}主页{% endblock %}
 
 {% block body %}
 
-<div id="content-main">
-	<!-- info 列表 -->
-   	<div class="col-md-8">
-   		{% include "info/_info_list.html"%}
-   	</div>
+    <div id="content-main">
+        <!-- info 列表 -->
+        <div class="col-md-8">
+            {% include "info/_info_list.html" %}
+        </div>
 
-   	<!-- 我的收藏 -->
-   	<div class="col-md-4 pull-right">
-	    <div class="panel panel-info">
-			<div class="panel-heading">
-				<h3 class="panel-title">
-					<a href="{% url "info.fav_list" 1 %}">
-					<span class="glyphicon glyphicon-folder-open"></span>
-					&nbsp;我的收藏
-					</a>
-				</h3>
-			</div>
-			<div class="panel-body">
-				{% include "info/_fav_list.html" with user=request.user%}
-			</div>
-		</div>
-   	</div>
-
-   	<!-- 热门职位-->
-   	<div class="col-md-4 pull-right">
-	    <div class="panel panel-info">
-			<div class="panel-heading">
-				<h3 class="panel-title">
-					<span class="glyphicon glyphicon-fire"></span>
-					热门职位
-				</h3>
-			</div>
-			<div class="panel-body">
-			    {% include "info/_hot_list.html"%}
-			</div>
-		</div>
-   	</div>
-
-    <!-- 分页 -->
-    <div id="pagination" class="col-md-8">
-		<ul class="pagination">
-
-		<!-- index page -->
-		{% if query_id == None %}
-
-			{% if page.has_previous %}<li><a href="{% url url_name page.previous_page_number %}">&laquo;</a></li>{% endif %}
-
-            <li>
-            <div class="btn-group dropup" style="display: inline;">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Page {{ page.number }} of {{ paginator.num_pages }} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    {% for idx in paginator.page_range %}
-                        {% if page.number == idx %}
-                        <li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
-                        {% else %}
-                        <li><a href="{% url url_name idx %}">{{idx}}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
+        <!-- 我的收藏 -->
+        <div class="col-md-4 pull-right">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a href="{% url "info.fav_list" 1 %}">
+                            <span class="glyphicon glyphicon-folder-open"></span>
+                            &nbsp;我的收藏
+                        </a>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    {% include "info/_fav_list.html" with user=request.user %}
+                </div>
             </div>
-            </li>
+        </div>
 
-
-			{% comment %}
-			{% for idx in paginator.page_range %}
-				{% if page.number == idx %}
-				<li class="active"><a href="{% url url_name idx %}">{{idx}}</a></li>
-				{% else %}
-				<li><a href="{% url url_name idx %}">{{idx}}</a></li>
-				{% endif %}
-			{% endfor %}
-			{% endcomment %}
-
-   	        {% if page.has_next %}<li><a href="{% url url_name page.next_page_number %}">&raquo;</a></li>{% endif %}
-
-		<!-- query page -->
-		{% else %}
-			{% if page.has_previous %}<li><a href="{% url url_name query_id page.previous_page_number %}">&laquo;</a></li>{% endif %}
-
-            <li>
-            <div class="btn-group dropup" style="display: inline;">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Page {{ page.number }} of {{ paginator.num_pages }} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    {% for idx in paginator.page_range %}
-                        {% if page.number == idx %}
-                        <li class="active"><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
-                        {% else %}
-                        <li><a href="{% url url_name query_id idx %}">{{idx}}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
+        <!-- 热门职位-->
+        <div class="col-md-4 pull-right">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span class="glyphicon glyphicon-fire"></span>
+                        热门职位
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    {% include "info/_hot_list.html" %}
+                </div>
             </div>
-            </li>
+        </div>
 
-   	        {% if page.has_next %}<li><a href="{% url url_name query_id page.next_page_number %}">&raquo;</a></li>{% endif %}
-		{% endif %}
-		</ul>
-	</div>
-</div>
+        <!-- 分页 -->
+        <div id="pagination" class="col-md-8">
+            <ul class="pagination">
+
+                {% if page.has_previous %}
+                    <li><a href="{% url url_name para page.previous_page_number %}">&laquo;</a></li>{% endif %}
+
+                <li>
+                    <div class="btn-group dropup" style="display: inline;">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Page {{ page.number }} of {{ paginator.num_pages }} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            {% for idx in paginator.page_range %}
+                                {% if page.number == idx %}
+                                    <li class="active"><a href="{% url url_name para idx %}">{{ idx }}</a></li>
+                                {% else %}
+                                    <li><a href="{% url url_name para idx %}">{{ idx }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+
+                {% if page.has_next %}
+                    <li><a href="{% url url_name para page.next_page_number %}">&raquo;</a></li>{% endif %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_script %}
     <!-- 激活tooltip -->
-	<script type="text/javascript">
-	$('.btn-default').tooltip()
-	</script>
+    <script type="text/javascript">4
+    $('.btn-default').tooltip()
+    </script>
 {% endblock %}

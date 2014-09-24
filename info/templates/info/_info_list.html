@@ -1,41 +1,47 @@
 {% for info in page %}
 
-<div class="bs-callout bs-callout-info">
-	<a href="{% url "info.detail" info.pk request.path %}" style="font-size:20px">{{info|truncatechars:"25"}}</a>
+    <div class="bs-callout bs-callout-info">
+        <a href="{% url "info.detail" info.pk request.path %}" style="font-size:20px">{{ info|truncatechars:"25" }}</a>
 
-	<!-- 收藏信息 -->
-	{% if fav_list and info in fav_list %}
-        <a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default btn-xs pull-right"
-		data-toggle="tooltip" data-placement="top" title="点击取消">
-            已收藏
-        </a>
-    {% else %}
-        <a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-danger btn-xs pull-right"
-		data-toggle="tooltip" data-placement="top" title="点击收藏">
-            <span class="glyphicon glyphicon-heart"></span>
-            收藏
-        </a>
-    {% endif %}
+        <!-- 收藏信息 -->
+        {% if fav_list and info in fav_list %}
+            <a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default btn-xs pull-right"
+               data-toggle="tooltip" data-placement="top" title="点击取消">
+                已收藏
+            </a>
+        {% else %}
+            <a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-danger btn-xs pull-right"
+               data-toggle="tooltip" data-placement="top" title="点击收藏">
+                <span class="glyphicon glyphicon-heart"></span>
+                收藏
+            </a>
+        {% endif %}
 
-    {% comment %}分享到微博
-    {% with content=info|truncatechars:"80" %}
-        <wb:share-button appkey="11psLc" addition="simple" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
-    {% endwith %}
-    {% endcomment %}
-
-    <h6>{{info.content|striptags|truncatechars:200}}</h6>
-
-    <!-- 分类信息 -->
-    {% if info.work_location %}
-
-        {% comment %}
-        多对多的关系，需要特殊处理
-        <a href="{% url "info.by_location" info.work_location.pk 1 %}" class="btn btn-info btn-xs">地区：{{info.work_location}}</a>
+        {% comment %}分享到微博
+        {% with content=info|truncatechars:"80" %}
+            <wb:share-button appkey="11psLc" addition="simple" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
+        {% endwith %}
         {% endcomment %}
-        <a href="{% url "info.by_category" info.work_category.pk 1 %}" class="btn btn-info btn-xs">类别：{{info.work_category}}</a>
 
-        <a class="btn btn-default btn-xs pull-right" disabled="disabled">访问次数：{{info.view_times}}</a>
-        <a class="btn btn-default btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
-    {% endif %}
-</div>
+        <h6>{{ info.content|striptags|truncatechars:200 }}</h6>
+
+        <!-- 分类信息 -->
+        {% if info.work_location %}
+
+            {% with info.work_category.pk|stringformat:"s" as id %}
+                <a href="{% url "info.list" "c_id,"|add:id 1 %}"
+                   class="btn btn-info btn-xs">类别：{{ info.work_category }}</a>
+            {% endwith %}
+
+            {% for location in info.work_location.all|slice:":5" %}
+                {% with location.pk|stringformat:"s" as id %}
+                    <a href="{% url "info.list" "l_id,"|add:id 1 %}" class="btn btn-warning btn-xs">{{ location }}</a>
+                {% endwith %}
+            {% endfor %}
+
+            <a class="btn btn-default btn-xs pull-right" disabled="disabled">访问次数：{{ info.view_times }}</a>
+            <a class="btn btn-default btn-xs pull-right" style="margin-right:5px"
+               disabled="disabled">发布时间：{{ info.pub_date|date:"Y M d" }}</a>
+        {% endif %}
+    </div>
 {% endfor %}

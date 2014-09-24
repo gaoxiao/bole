@@ -1,53 +1,53 @@
 {% extends "info_base.html" %}
 
 {% block body %}
-<div id="content-main">
-   	<div class="col-md-10 col-md-offset-1">
-		<div id="navi" class="row">
-	   		<a href="{{from_url}}" class="btn btn-danger large">
-	   			<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;返回
-	   		</a>
-	   		<!-- 分类信息 -->
+    <div id="content-main">
+        <div class="col-md-10 col-md-offset-1">
+            <div id="navi" class="row">
+                <a href="{{ from_url }}" class="btn btn-danger large">
+                    <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;&nbsp;返回
+                </a>
 
-            {% comment %}
-            地区信息需要特殊处理
-	    	<a href="{% url "info.by_location" info.work_location.pk 1 %}" class="btn btn-info">
-	    		地区：{{info.work_location}} <span class="badge">{{ location_num }}</span>
-	    	</a>
-            <a href="{% url "info.by_category" info.first_category.pk 1 %}" class="btn btn-info">
-            类别：{{info.first_category}} <span class="badge">{{category_num}}</span>
-            </a>
-	    	{% endcomment %}
-            <a href="{% url "info.by_category" info.work_category.pk 1 %}" class="btn btn-info">
-                类别：{{info.work_category.parent}} >> {{ info.work_category }}
-            </a>
+                <!-- 分类信息 -->
+                {% with info.work_category.pk|stringformat:"s" as id %}
+                    <a href="{% url "info.list" "c_id,"|add:id 1 %}"
+                       class="btn btn-info">类别：{{ info.work_category.parent }} >> {{ info.work_category }}</a>
+                {% endwith %}
 
-            <!-- 收藏信息 -->
-			{% if favouriteInfo %}
-			<a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default pull-right" 
-				data-toggle="tooltip" data-placement="top" title="点击取消">
-				已收藏
-			</a>
-			{% else %}
-			<a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-danger pull-right" 
-				data-toggle="tooltip" data-placement="top" title="点击收藏">
-				<span class="glyphicon glyphicon-heart"></span>
-				 收藏
-			</a>
-			{% endif %}
+                {% for location in info.work_location.all|slice:":5" %}
+                    {% with location.pk|stringformat:"s" as id %}
+                        <a href="{% url "info.list" "l_id,"|add:id 1 %}" class="btn btn-warning">{{ location }}</a>
+                    {% endwith %}
+                {% endfor %}
 
-            {% comment %}分享到微博{% endcomment %}
-            {% with content=info|truncatechars:"80" %}
-                <div class="pull-right" style="margin-top: 6px">
-                    <wb:share-button appkey="11psLc" addition="number" type="button" default_text="{{ content }}" class="pull-right" ></wb:share-button>
-                </div>
-            {% endwith %}
-		</div>
-		<br>
-	   	<div class="row">
-   			<h2>{{ info.title }}</h2>
-            <table class="table table-condensed">
-                <thead>
+                <!-- 收藏信息 -->
+                {% if favouriteInfo %}
+                    <a href="{% url "info.rm_fav" info.pk request.path %}" class="btn btn-default pull-right"
+                       data-toggle="tooltip" data-placement="top" title="点击取消">
+                        已收藏
+                    </a>
+                {% else %}
+                    <a href="{% url "info.add_fav" info.pk request.path %}" class="btn btn-danger pull-right"
+                       data-toggle="tooltip" data-placement="top" title="点击收藏">
+                        <span class="glyphicon glyphicon-heart"></span>
+                        收藏
+                    </a>
+                {% endif %}
+
+                {% comment %}分享到微博{% endcomment %}
+                {% with content=info|truncatechars:"80" %}
+                    <div class="pull-right" style="margin-top: 6px">
+                        <wb:share-button appkey="11psLc" addition="number" type="button" default_text="{{ content }}"
+                                         class="pull-right"></wb:share-button>
+                    </div>
+                {% endwith %}
+            </div>
+            <br>
+
+            <div class="row">
+                <h2>{{ info.title }}</h2>
+                <table class="table table-condensed">
+                    <thead>
                     <tr>
                         <th>工作年限要求</th>
                         <th>学历要求</th>
@@ -55,8 +55,8 @@
                         <th>生效日期</th>
                         <th>失效日期</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr>
                         <td>{{ info.work_experience }}</td>
                         <td>{{ info.degree }}</td>
@@ -82,27 +82,30 @@
                             {% endif %}
                         </td>
                     </tr>
-                </tbody>
-            </table>
-		</div>
-	   	<div class="row">
-            <h4>职位要求:</h4>
-            <pre class="bs-callout bs-callout-warning" style="background-color:white">{{info.requirement|striptags}}</pre>
-            <h4>职位描述:</h4>
-	   		<pre class="bs-callout bs-callout-info" style="background-color:white">{{info.description|striptags}}</pre>
-	   	</div>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <h4>职位要求:</h4>
+                <pre class="bs-callout bs-callout-warning"
+                     style="background-color:white">{{ info.requirement|striptags }}</pre>
+                <h4>职位描述:</h4>
+                <pre class="bs-callout bs-callout-info"
+                     style="background-color:white">{{ info.description|striptags }}</pre>
+            </div>
 
-	   	<div class="row">
-	   		<a class="btn btn-default btn-xs pull-right" disabled="disabled">访问次数：{{info.view_times}}</a>
-			<a class="btn btn-default btn-xs pull-right" style="margin-right:5px" disabled="disabled">发布时间：{{info.pub_date|date:"Y M d"}}</a>
-    	</div>
-   	</div>
-</div>
+            <div class="row">
+                <a class="btn btn-default btn-xs pull-right" disabled="disabled">访问次数：{{ info.view_times }}</a>
+                <a class="btn btn-default btn-xs pull-right" style="margin-right:5px"
+                   disabled="disabled">发布时间：{{ info.pub_date|date:"Y M d" }}</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_script %}
     <!-- 激活tooltip -->
-	<script type="text/javascript">
-	$('.btn-default').tooltip()
-	</script>
+    <script type="text/javascript">
+        $('.btn-default').tooltip()
+    </script>
 {% endblock %}

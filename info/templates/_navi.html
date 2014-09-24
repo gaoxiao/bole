@@ -3,7 +3,9 @@
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">工作地点 <span class="caret"></span></a>
 		<ul class="dropdown-menu" role="menu">
 		{% for o in location_list %}
-			<li><a href="{% url "info.by_location" o.pk 1 %}">{{ o.location }}</a></li>
+            {% with o.pk|stringformat:"s" as id %}
+                <li><a href="{% url "info.list" "l_id,"|add:id 1 %}">{{ o.location }}</a></li>
+            {% endwith %}
 		{% endfor %}
 		</ul>
 	</li>
@@ -18,11 +20,25 @@
                 <ul class="dropdown-menu">
                     {% for second in second_list %}
                     <li class="menu-item ">
-                        <a href="{% url "info.by_category" second.pk 1 %}">{{ second }}</a>
+                    {% with second.pk|stringformat:"s" as id %}
+                        <a href="{% url "info.list" "c_id,"|add:id 1 %}">{{ second }}</a>
+                    {% endwith %}
                     </li>
                     {% endfor %}
                 </ul>
             </li>
+		{% endfor %}
+		</ul>
+	</li>
+</ul>
+<ul class="nav navbar-nav">
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">职位性质 <span class="caret"></span></a>
+		<ul class="dropdown-menu" role="menu">
+		{% for o in nature_list %}
+            {% with o.pk|stringformat:"s" as id %}
+                <li><a href="{% url "info.list" "n_id,"|add:id 1 %}">{{ o }}</a></li>
+            {% endwith %}
 		{% endfor %}
 		</ul>
 	</li>

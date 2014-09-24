@@ -13,36 +13,46 @@ import datetime
 
 PAGE_SIZE = 10
 CACHE_PREFIX = 'local_'
-CLASS_CACHE_KEY = 'local_class'
-AREA_CACHE_KEY = 'local_area'
+CATEGORY_CACHE_KEY = 'local_category'
+LOCATION_CACHE_KEY = 'local_location'
+NATURE_CACHE_KEY = 'local_nature'
 CACHE_TIME = 60 * 60
 
 
 def index(request):
-    return list(request, 1)
+    return list(request, "", 1)
 
 
-def list(request, page_num):
+def parse_para(para_str):
+    paraMap = {}
+    if para_str and len(para_str) > 0:
+        paras = para_str.split(";")
+        for p in paras:
+            k, v = p.split(",")
+            paraMap[k] = v
+    return paraMap
+
+
+def list(request, para, page_num):
+    if not para:
+        para = ""
+    paraMap = parse_para(para)
+    location_id = paraMap.get('l_id')
+    category_id = paraMap.get('c_id')
+    nature_id = paraMap.get('n_id')
+
     all_list = Info.objects.order_by('-pub_date')
+    if location_id:
+        all_list = all_list.filter(work_location__pk=location_id)
+    if category_id:
+        all_list = all_list.filter(work_category__pk=category_id)
+    if nature_id:
+        all_list = all_list.filter(work_nature__pk=nature_id)
+
     return render_with_list(request, all_list,
                             page_num=page_num,
-                            url_name='info.list', )
-
-
-def query_by_location(request, location_id, page_num):
-    all_list = Info.objects.filter(work_location__pk=location_id).order_by('-pub_date')
-    return render_with_list(request, all_list,
-                            page_num=page_num,
-                            url_name='info.by_location',
-                            query_id=location_id, )
-
-
-def query_by_category(request, category_id, page_num):
-    all_list = Info.objects.filter(work_category__pk=category_id).order_by('-pub_date')
-    return render_with_list(request, all_list,
-                            page_num=page_num,
-                            url_name='info.by_category',
-                            query_id=category_id, )
+                            url_name='info.list',
+                            para=para)
 
 
 def render_with_list(request, all_list, **args):
@@ -59,11 +69,12 @@ def render_with_list(request, all_list, **args):
     context = {
         'paginator': paginator,
         'page': paginator.page(page_num),
-        'url_name': args['url_name'],
+        'url_name': args.get('url_name'),
         'query_id': args.get('query_id'),
+        'para': args.get('para'),
         'hot_list': hot_list,
         'fav_list': fav_list,
-        'form': SearchForm()
+        'form': SearchForm(),
     }
 
     return render(request, 'info/list.html', context)
@@ -192,12 +203,9 @@ def detail(request, id, from_url):
     info.view_times += 1
     info.save()
 
-    category_num = get_from_cache(info)
-
     context = {
         'info': info,
         'from_url': from_url,
-        'category_num': category_num,
         'favouriteInfo': favouriteInfo
     }
 
@@ -237,14 +245,19 @@ def append_info(request):
     request processors that return dictionaries to be merged into a
     template context
 
-    add location and category list to template context
+    add location , nature and category list to template context
     '''
-    location_list = cache.get(AREA_CACHE_KEY)
+    location_list = cache.get(LOCATION_CACHE_KEY)
     if not location_list:
         location_list = WorkLocation.objects.all()
-        cache.set(AREA_CACHE_KEY, location_list, CACHE_TIME)
+        cache.set(LOCATION_CACHE_KEY, location_list, CACHE_TIME)
 
-    category_map = cache.get(CLASS_CACHE_KEY)
+    nature_list = cache.get(NATURE_CACHE_KEY)
+    if not nature_list:
+        nature_list = WorkNature.objects.all()
+        cache.set(NATURE_CACHE_KEY, nature_list, CACHE_TIME)
+
+    category_map = cache.get(CATEGORY_CACHE_KEY)
     if not category_map:
         all_category = WorkCategory.objects.all()
         category_map = {}
@@ -257,9 +270,9 @@ def append_info(request):
             if c.parent:
                 category_map[c.parent].append(c)
 
-        cache.set(CLASS_CACHE_KEY, category_map, CACHE_TIME)
+        cache.set(CATEGORY_CACHE_KEY, category_map, CACHE_TIME)
 
-    return {"location_list": location_list, "category_map": category_map}
+    return {"location_list": location_list, "category_map": category_map, "nature_list": nature_list}
 
 
 def get_from_cache(info):
